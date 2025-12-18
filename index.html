@@ -55,7 +55,7 @@ button{margin:8px;padding:10px 20px;font-size:16px;}
 let time=300, interval;
 
 async function newPrompt(){
-  const res = await fetch("/api/prompt");
+  const res = await fetch("https://magic-argument-8-ball.vercel.app//api/prompt");
   const data = await res.json();
   document.getElementById("prompt").innerText = data.prompt;
   document.getElementById("timer").innerText="";
