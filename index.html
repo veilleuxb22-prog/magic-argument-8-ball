@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MAGIC ARGUMENT 8 BALL — AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+  margin:0;height:100vh;display:flex;justify-content:center;align-items:center;
+  background:radial-gradient(circle,#6b0000,#000);
+  font-family:Arial;color:white;
+}
+.container{text-align:center;}
+.ball{
+  width:360px;height:360px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#ff4b4b,#000);
+  position:relative;overflow:hidden;
+}
+.spiral{
+  position:absolute;inset:-60px;
+  background:conic-gradient(#ff2a2a,#5a0000,#ff2a2a);
+  border-radius:50%;animation:spin 10s linear infinite;opacity:.65;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.triangle{
+  position:absolute;top:95px;left:50%;transform:translateX(-50%);
+  width:0;height:0;border-left:120px solid transparent;
+  border-right:120px solid transparent;border-top:200px solid #7a0000;
+}
+.prompt{
+  position:absolute;top:35px;left:-90px;width:180px;font-size:14px;
+}
+.timer{margin-top:15px;font-size:20px;font-weight:bold;}
+button{margin:8px;padding:10px 20px;font-size:16px;}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h1>MAGIC ARGUMENT 8 BALL — AI</h1>
+
+<div class="ball">
+  <div class="spiral"></div>
+  <div class="triangle">
+    <div class="prompt" id="prompt">Press NEW PROMPT</div>
+  </div>
+</div>
+
+<div class="timer" id="timer"></div>
+<button onclick="startTimer()">OK</button>
+<button onclick="newPrompt()">NEW PROMPT</button>
+</div>
+
+<script>
+let time=300, interval;
+
+async function newPrompt(){
+  const res = await fetch("/api/prompt");
+  const data = await res.json();
+  document.getElementById("prompt").innerText = data.prompt;
+  document.getElementById("timer").innerText="";
+  clearInterval(interval);
+}
+
+function startTimer(){
+  clearInterval(interval);
+  time=300;
+  interval=setInterval(()=>{
+    if(time<=0){
+      clearInterval(interval);
+      document.getElementById("timer").innerText="TIME TO PRESENT";
+    }else{
+      document.getElementById("timer").innerText =
+        Math.floor(time/60)+":"+(time%60<10?"0":"")+time%60;
+      time--;
+    }
+  },1000);
+}
+</script>
+</body>
+</html>
